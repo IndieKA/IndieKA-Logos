@@ -1,0 +1,172 @@
+// My new logo, Atomic Fission!
+// Only about 100 lines of code!
+
+// Define Variables used to create the 3D rotating sphere
+var drawNodes = false;
+var drawEdges = true;
+var sine = 0;
+noStroke();
+
+// Draw the "Nodes"
+var nodes = [];
+for(var a = 0; a < 36; a++) {
+    nodes.push([200 * sin(a * 10), 200 * cos(a * 10), 0]);
+}
+for(var a = 0; a < 36; a++) {
+    nodes.push([200 * sin(a * 10), 0, 200 * cos(a * 10)]);
+}
+for(var a = 0; a < 36; a++) {
+    nodes.push([0, 200 * cos(a * 10), 200 * sin(a * 10)]);
+}
+var node2 = nodes;
+
+// Draw the "Edges"
+var edges = [];
+for(var a = 0; a < 35; a++) {
+    edges.push([a, a + 1]);
+}
+edges.push([0, 35]);
+for(var a = 36; a < 71; a++) {
+    edges.push([a, a + 1]);
+}
+edges.push([36, 71]);
+for(var a = 72; a < 107; a++) {
+    edges.push([a, a + 1]);
+}
+edges.push([72, 107]);
+
+// Draw the faces and the XZ YZ and the XY coords
+var faces = [];
+var XY = 0,
+    XZ = 0,
+    YZ = 0;
+
+// Now, call the nodes and edges
+var drawNodes = function() {
+    noStroke();
+    fill(0);
+    for(var b = 0; b < node2.length; b++) {
+        var size = 0.011875 * node2[b][2] + 5.25;
+        ellipse(node2[b][0], node2[b][1], size, size);
+    }
+};
+var drawEdges = function(r, g, b) {
+    stroke(0);
+    for(var b = 0; b < edges.length; b++) {
+        var size = -0.011875 * (nodes[edges[b][0]][2] + nodes[edges[b][1]][2]) / 2 + 4;
+        strokeWeight(12);
+        stroke(random(255,0));
+        line(node2[edges[b][0]][0], node2[edges[b][0]][1], node2[edges[b][1]][0], node2[edges[b][1]][1]);
+    }
+    
+};
+
+// Call the rotation in a function(t);
+var rotateXY = function(t) {
+    XY += t;
+    while(XY >= 360) {
+        XY -= 360;
+    }
+    while(XY < 0) {
+        XY += 360;
+    }
+    var sin_t = sin(t);
+    var cos_t = cos(t);
+    for(var b = 0; b < node2.length; b++) {
+        var x = node2[b][0];
+        var y = node2[b][1];
+        node2[b][0] = x * cos_t - y * sin_t;
+        node2[b][1] = y * cos_t + x * sin_t;
+    }
+};
+var rotateXZ = function(t) {
+    XZ += t;
+    while(XZ >= 360) {
+        XZ -= 360;
+    }
+    while(XZ < 0) {
+        XZ += 360;
+    }
+    var sin_t = sin(t);
+    var cos_t = cos(t);
+    for(var b = 0; b < node2.length; b++) {
+        var x = node2[b][0];
+        var z = node2[b][2];
+        node2[b][0] = x * cos_t - z * sin_t;
+        node2[b][2] = z * cos_t + x * sin_t;
+    }
+};
+var rotateYZ = function(t) {
+    YZ += t;
+    while(YZ >= 360) {
+        YZ -= 360;
+    }
+    while(YZ < 0) {
+        YZ += 360;
+    }
+    var sin_t = sin(t);
+    var cos_t = cos(t);
+    for(var b = 0; b < node2.length; b++) {
+        var y = node2[b][1];
+        var z = node2[b][2];
+        node2[b][1] = y * cos_t - z * sin_t;
+        node2[b][2] = z * cos_t + y * sin_t;
+    }
+};
+
+// Draw the star background
+var starBackground = function() {
+    this.x = random(1, 800);
+    this.y = random(1, 400);
+    this.size = random(0.1, 3.2);
+    this.speed = this.size;
+    this.drawStar = function() {
+        ellipse(this.x, this.y, this.size, this.size);
+    };
+    this.starMover = function() {
+        this.x = this.x - this.speed;
+        if(this.x < 0) {
+            this.x = random(400, 800);
+        }
+    };
+};
+var stars = [];
+for(var i = 0; i < 1000; i++) {
+    stars.push(new starBackground());
+}
+
+// Start the draw loop
+var aa = 0.5;
+draw = function() {
+    aa+=0.02;
+    background(0, 0, 0);
+    for(var j = 0; j < stars.length; j++) {
+        noStroke();
+        fill(255, 255, 255);
+        stars[j].starMover();
+        stars[j].drawStar();
+    }
+    pushMatrix();
+    translate(200,200);
+    scale(aa,aa);
+    if(drawNodes) {
+        drawNodes();
+    }
+    if(drawEdges) {
+        drawEdges();
+    }
+    if(!mouseIsPressed) {
+        rotateXY(1);
+        rotateXZ(2);
+        rotateYZ(3);
+    }
+    popMatrix();
+    textFont(createFont("Tahoma"));
+    textSize(101);
+    textAlign(CENTER,CENTER);
+    fill(255, 255, 255);
+    text("Atomic\nFission",201,201);
+    if(aa>3.5){
+        noLoop();
+    }
+};
