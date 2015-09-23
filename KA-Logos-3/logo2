@@ -1,0 +1,43 @@
+var logo = function(n, x, y, radius){
+    this.n = n+1;
+    this.logo = [];
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.rot = 0;
+    this.logoPushed = function(){
+        for(var i = 0;i < this.n+1;i++){
+            this.logo.push({rot:i*this.n*5,speed:i+3,rot2:0});
+        }
+    };
+    this.draw = function() {
+        noStroke();
+        for(var i = 1;i < this.logo.length;i++){
+            if(i%2===0){
+                fill(255, 0, 0);
+            }else{
+                fill(0, 255, 255);
+            }
+            translate(this.x, this.y);
+            rotate(this.logo[i].rot+this.logo[i].rot2);
+            bezier(this.x+this.radius-200, this.y-200, 10-i*10/n, 10-i*10/n, frameCount/3, frameCount*3, frameCount%30, frameCount/3);
+            resetMatrix();
+            this.logo[i].rot2+=i/10+2;
+        }
+    };
+};
+draw = function() {
+    background(0, 0, 0);
+    var d = [];
+    frameRate(60);
+    for(var i = 0;i < 10;i++){
+        d.push(new logo(5+i, frameCount/50, 200, frameCount+i*10));
+        d[i].logoPushed();
+    }
+    for(var i in d){
+        d[i].draw();
+    }
+    fill(255, 255, 255);
+    textFont(createFont("Tahoma",30));
+    text("Your name here",150,200);
+};
