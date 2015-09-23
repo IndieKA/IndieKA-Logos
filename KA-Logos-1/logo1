@@ -1,0 +1,121 @@
+
+var linesPerRing = 100;
+var rings = [{
+    x: 0,
+    dx: 1,
+    y: 0,
+    dy: 0,
+    z: 0,
+    dz: 0,
+    size: 180,
+    color: color(255, 0, 0)
+}, {
+    x: 0,
+    dx: 0,
+    y: 0,
+    dy: 1,
+    z: 0,
+    dz: 0,
+    size: 170,
+    color: color(0, 255, 50)
+}, {
+    x: 0,
+    dx: 0,
+    y: 0,
+    dy: 0,
+    z: 0,
+    dz: 1,
+    size: 160,
+    color: color(0, 255, 255)
+}];
+var rotX3D = function(theta, nodes) {
+    var sin_t = sin(theta);
+    var cos_t = cos(theta);
+    for(var n = 0; n < nodes.length; n++) {
+        var y = nodes[n][1];
+        var z = nodes[n][2];
+        nodes[n][1] = y * cos_t - z * sin_t;
+        nodes[n][2] = z * cos_t + y * sin_t;
+    }
+    return nodes;
+};
+var rotY3D = function(theta, nodes) {
+    var sin_t = sin(theta);
+    var cos_t = cos(theta);
+    for(var n = 0; n < nodes.length; n++) {
+        var x = nodes[n][0];
+        var z = nodes[n][2];
+        nodes[n][0] = x * cos_t - z * sin_t;
+        nodes[n][2] = z * cos_t + x * sin_t;
+    }
+    return nodes;
+};
+var rotZ3D = function(theta, nodes) {
+    var sin_t = sin(theta);
+    var cos_t = cos(theta);
+    for(var n = 0; n < nodes.length; n++) {
+        var x = nodes[n][0];
+        var y = nodes[n][1];
+        nodes[n][0] = x * cos_t - y * sin_t;
+        nodes[n][1] = y * cos_t + x * sin_t;
+    }
+    return nodes;
+};
+var rotate3D = function(rotX, rotY, rotZ, nodes) {
+    nodes = rotX3D(rotX, nodes);
+    nodes = rotY3D(rotY, nodes);
+    nodes = rotZ3D(rotZ, nodes);
+    return nodes;
+};
+var Circles3D = function(rotX, rotY, rotZ, size, color) {
+    var nodes = [
+        [0, size, 0]
+    ];
+    var edges = [
+        [0, 0]
+    ];
+    for(var a = 0; a < linesPerRing; a++) {
+        nodes.push([sin(a * (360 / linesPerRing)) * size, cos(a * (360 / linesPerRing)) * size, 0]);
+    }
+    for(var a = 0; a < nodes.length - 2; a++) {
+        edges.push([a, a + 1]);
+    }
+    edges.push([0, linesPerRing - 1]);
+    nodes = rotate3D(rotX, rotY, rotZ, nodes);
+    for(var e = 0; e < edges.length; e++) {
+        var n0 = edges[e][0];
+        var n1 = edges[e][1];
+        var node0 = nodes[n0];
+        var node1 = nodes[n1];
+        stroke(color);
+        strokeWeight((200 - nodes[e][2]) / 30);
+        line(node0[0], node0[1], node1[0], node1[1]);
+    }
+};
+var aa = 0.5;
+var logo_loading_time = 10;
+var draw = function() {
+    logo_loading_time++;
+    background(255, 255, 255);
+    pushMatrix();
+    translate(200, 200);
+    scale(aa);
+    for(var a = 0; a < rings.length; a++) {
+        for(var b = a; b < rings.length; b++) {
+            rings[b].x += rings[a].dx;
+            rings[b].y += rings[a].dy;
+            rings[b].z += rings[a].dz;
+        }
+        Circles3D(rings[a].x, rings[a].y, rings[a].z, rings[a].size, rings[a].color);
+    }
+    popMatrix();
+    textAlign(CENTER,CENTER);
+    textSize(50);
+    fill(28, 28, 28);
+    text("Satisfied Soul",201,201);
+    aa+=0.001;
+    if(logo_loading_time > 400){
+        background(255, 0, 0);
+        println("Put your program here! This was only meant for Satisfied Soul. If you want to change the loading time, go to line 117.");
+    }
+};
