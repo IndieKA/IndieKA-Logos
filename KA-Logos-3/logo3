@@ -1,0 +1,131 @@
+
+var drawNodes = false;
+var drawEdges = true;
+var sine = 0;
+noStroke();
+var nodes = [];
+for(var a = 0; a < 36; a++) {
+    nodes.push([100 * sin(a * 10), 100 * cos(a * 10), 0]);
+}
+for(var a = 0; a < 36; a++) {
+    nodes.push([100 * sin(a * 10), 0, 100 * cos(a * 10)]);
+}
+for(var a = 0; a < 36; a++) {
+    nodes.push([0, 100 * cos(a * 10), 100 * sin(a * 10)]);
+}
+var node2 = nodes;
+var edges = [];
+for(var a = 0; a < 35; a++) {
+    edges.push([a, a + 1]);
+}
+edges.push([0, 35]);
+for(var a = 36; a < 71; a++) {
+    edges.push([a, a + 1]);
+}
+edges.push([36, 71]);
+for(var a = 72; a < 107; a++) {
+    edges.push([a, a + 1]);
+}
+edges.push([72, 107]);
+var faces = [];
+var XY = 0,
+    XZ = 0,
+    YZ = 0;
+var drawNodes = function() {
+    noStroke();
+    fill(0);
+    for(var b = 0; b < node2.length; b++) {
+        var size = -0.011875 * node2[b][2] + 5.25;
+        ellipse(node2[b][0], node2[b][1], size, size);
+    }
+};
+var drawEdges = function() {
+    stroke(0);
+    for(var b = 0; b < edges.length; b++) {
+        var size = -0.011875 * (nodes[edges[b][0]][2] + nodes[edges[b][1]][2]) / 2 + 4;
+        strokeWeight(size);
+        line(node2[edges[b][0]][0], node2[edges[b][0]][1], node2[edges[b][1]][0], node2[edges[b][1]][1]);
+    }
+};
+var rotateXY = function(t) {
+    XY += t;
+    while(XY >= 360) {
+        XY -= 360;
+    }
+    while(XY < 0) {
+        XY += 360;
+    }
+    var sin_t = sin(t);
+    var cos_t = cos(t);
+    for(var b = 0; b < node2.length; b++) {
+        var x = node2[b][0];
+        var y = node2[b][1];
+        node2[b][0] = x * cos_t - y * sin_t;
+        node2[b][1] = y * cos_t + x * sin_t;
+    }
+};
+var rotateXZ = function(t) {
+    XZ += t;
+    while(XZ >= 360) {
+        XZ -= 360;
+    }
+    while(XZ < 0) {
+        XZ += 360;
+    }
+    var sin_t = sin(t);
+    var cos_t = cos(t);
+    for(var b = 0; b < node2.length; b++) {
+        var x = node2[b][0];
+        var z = node2[b][2];
+        node2[b][0] = x * cos_t - z * sin_t;
+        node2[b][2] = z * cos_t + x * sin_t;
+    }
+};
+var rotateYZ = function(t) {
+    YZ += t;
+    while(YZ >= 360) {
+        YZ -= 360;
+    }
+    while(YZ < 0) {
+        YZ += 360;
+    }
+    var sin_t = sin(t);
+    var cos_t = cos(t);
+    for(var b = 0; b < node2.length; b++) {
+        var y = node2[b][1];
+        var z = node2[b][2];
+        node2[b][1] = y * cos_t - z * sin_t;
+        node2[b][2] = z * cos_t + y * sin_t;
+    }
+};
+var draw = function() {
+    resetMatrix();
+    pushMatrix();
+    background(255);
+    translate(200, 200);
+    sine--;
+    for(var i = sine; i < sine + 400; i += 10) {
+        fill(i);
+        noStroke();
+        ellipse(mouseX, mouseY, 10000 / i, 10000 / i);
+    }
+    if(sine < -200) {
+        sine = 0;
+    }
+    if(drawNodes) {
+        drawNodes();
+    }
+    if(drawEdges) {
+        drawEdges();
+    }
+    if(!mouseIsPressed) {
+        rotateXY(1);
+        rotateXZ(2);
+        rotateYZ(3);
+    }
+    popMatrix();
+    textSize(170);
+    textAlign(CENTER,CENTER);
+    fill(69, 69, 69);
+    text("Ryan",201,201);
+};
