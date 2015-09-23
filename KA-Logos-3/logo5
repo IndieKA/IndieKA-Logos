@@ -1,0 +1,155 @@
+var pointHeight = 8.75; // Tuning peg height
+var pointWidth = pointHeight * 0.75; // Tuning peg width
+var r = 255;
+var g = 0;
+var g_255 = false;
+var b = 0;
+var scaleRainbow = 11;
+var draw = function() {
+    textFont(createFont("Segoe UI Light"));
+    background(255, 0, 0);
+    for(var i = 1; i <= 400; i++) {
+        stroke(frameCount/3, frameCount*3, frameCount%90);
+        fill(frameCount);
+        line(i, 0, i, 400);
+        if(r > 0) {
+            r = r-width/scaleRainbow/255*10; 
+        }
+        else {
+            r = 0;
+        }
+        if(g < 255 && !g_255) {
+           g = g + width/scaleRainbow/255*10;
+        }
+        if(g >= 255) {
+            g_255 = true;
+            g = 255;
+        }
+        if(g_255 && g > 0) {
+            g = g - width/scaleRainbow/255*10;
+        }
+        if(g_255 && g < 0) {
+            g = 0;
+        }
+        if(g_255 && b < 255) {
+            b = b + width/scaleRainbow/255*10;
+        }
+    }
+    noStroke(); // Body
+    fill(175, 30, 5);
+    ellipse(200, 195, 100, 93);
+    ellipse(200, 300, 124, 93);
+    rect(168, 230, 64, 30);
+    noFill();
+    strokeWeight(5);
+    stroke(175, 30, 5);
+    arc(154, 243, 30, 50, -100, 115);
+    arc(246, 243, 30, 50, -295, -80);
+    strokeWeight(3);
+    stroke(0, 0, 0);
+    bezier(185, 235, 175, 235, 175, 275, 165, 270);
+    bezier(215, 235, 225, 235, 225, 275, 235, 270);
+
+    strokeWeight(4 / 5); // inlaying
+    arc(200, 195, 95, 87, -215, 35);
+    arc(200, 300, 119, 87, -50, 230);
+    arc(155, 243, 30, 50, -100, 115);
+    arc(245, 243, 30, 50, -295, -80);
+
+    strokeWeight(5); // Tail piece peg
+    point(200, 348);
+
+    strokeWeight(1); // Fine tuning levers
+    fill(205, 205, 205);
+    rect(192, 270, 2, 10);
+    rect(196, 270, 2, 10);
+    rect(200, 270, 2, 10);
+    rect(204, 270, 2, 10);
+    line(197, 348, 199, 343);
+    line(203, 348, 201, 343);
+
+    strokeWeight(8); // Tail piece
+    fill(0, 0, 0);
+    line(200, 340, 200, 300);
+    triangle(200, 320, 194, 280, 206, 280);
+
+    strokeWeight(3); // Fine tuners
+    stroke(190, 190, 190);
+    point(194, 281);
+    point(198, 281);
+    point(202, 281);
+    point(206, 281);
+
+    strokeWeight(10); // Neck
+    stroke(175, 30, 5);
+    line(200, 150, 200, 80);
+
+    strokeWeight(1); // Fingerboard
+    fill(0, 0, 0);
+    triangle(200, 20, 210, 225, 190, 225);
+
+    strokeWeight(2); // Tuning peg box
+    stroke(175, 30, 5);
+    fill(35, 35, 35);
+    rect(195, 45, 10, 35);
+
+    strokeWeight(1); // Scroll
+    stroke(135, 30, 10);
+    fill(175, 30, 5);
+    rect(190, 32, 20, 7);
+    rect(192, 28, 16, 13);
+    rect(194, 21, 12, 22);
+    triangle(200, 19, 195, 46, 206, 46);
+    line(200, 19, 200, 46);
+    stroke(0, 0, 0);
+
+    strokeWeight(3); // Tuning peg shafts
+    line(195, 82, 205, 82);
+    line(190, 74, 205, 74);
+    line(195, 67, 210, 67);
+    line(190, 60, 205, 60);
+    line(195, 53, 210, 53);
+
+    fill(0, 0, 0); // Tuning peg heads
+    ellipse(185, 74, pointWidth, pointHeight);
+    ellipse(215, 67, pointWidth, pointHeight);
+    ellipse(185, 60, pointWidth, pointHeight);
+    ellipse(215, 53, pointWidth, pointHeight);
+    stroke(175, 30, 5); // (Lines just to cover peg shafts.)
+    line(195, 45, 195, 79);
+    line(205, 45, 205, 79);
+
+    strokeWeight(2); // Bridge
+    stroke(250, 180, 100);
+    line(190, 255, 208, 255);
+
+    strokeWeight(1); // G string
+    stroke(160, 160, 160);
+    line(198, 72, 193, 275);
+
+    strokeWeight(1 * 0.80); // D string
+    line(199, 58, 197, 275);
+
+    stroke(140, 140, 140); // A string
+    strokeWeight(1 * 0.55);
+    line(201, 65, 201, 275);
+
+    strokeWeight(1 * 0.40); // E string
+    line(202, 50, 205, 275);
+
+    strokeWeight(8); // Chin rest
+    stroke(0, 0, 0);
+    line(185, 342, 213, 342);
+    noStroke();
+    fill(0, 0, 0);
+    arc(177, 335, 50, 40, 200, 380);
+    arc(176, 329, 45, 20, 0, 200);
+    arc(193, 335, 60, 20, 90, 270);
+    fill(255, 155, 0);
+    arc(188, 345, 7, 5, 0, 180);
+    arc(212, 345, 7, 5, 0, 180);
+    textAlign(CENTER,CENTER);
+    textSize(50);
+    fill(255, 0, 0);
+    text("#1 Lindsey Stirling \nProponent",201,220);
+};
