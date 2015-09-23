@@ -1,0 +1,30 @@
+var angle = function(x, y, w, h){ 
+    pushMatrix();
+    translate(200,200);
+    fill(0, 0, 0);
+    rotate(frameCount*3*3);
+    fill(frameCount*3,frameCount/3,frameRate);
+    triangle(x,y,w%frameCount/30,h,frameCount/30,frameCount/90);
+    popMatrix();
+};
+var oct = function(x ,y ,w ,h){
+    pushMatrix();
+    strokeWeight(3);
+    fill(255, 255, 255);
+    translate(200,200);
+    rotate(frameCount*6.5*3);
+    fill(frameCount*3,frameCount/3,frameRate);
+    bezier(x,y,w%frameCount*3,h%frameCount/3,frameCount/100,frameCount/90, frameCount%30, frameCount/3);
+    popMatrix();
+    
+};
+draw = function(){
+    frameRate(Infinity);
+    angle(30,30,30,30);
+    angle(123,50,50,50);
+    oct(30,30,30,30);
+    oct(100,100,100,100);
+    fill(82, 82, 82);
+    textSize(70);
+    text(" ✇",151,229);
+};
