@@ -1,0 +1,59 @@
+angleMode = "degrees";
+var snap = 255;
+var roff = -180;
+var goff = -90;
+var boff = 0;
+var rnumber = floor(random(-1, 6)+1);
+var draw = function() {
+    for(var i = 0; i < 400; i+=1) {
+        //stroke(sin(i-180) * 255 + 128, sin(i-90) * 255 + 128, sin(i) * 255 + 128);
+        stroke((i + roff) % snap, (i + goff) % snap, (i + boff) % snap, i + snap);
+        
+        line(i, 0, i, 400);
+        line(400 - i, 0, 400 - i, 400);
+        line(0, i, frameCount/3, i);
+        line(0, 400 - i, frameCount/3, frameCount%3 );
+    }
+    
+    if(frameCount % 100 === 0) {
+        rnumber = floor(random(-1, 6)+1);
+    }
+    if(rnumber === 0) {
+        roff += 1;
+        goff += 1;
+        boff += 1;
+    }
+    if(rnumber === 1) {
+        roff += 1;
+        goff -= 1;
+        boff -= 1;
+    }
+    if(rnumber === 2) {
+        roff -= 1;
+        goff += 1;
+        boff -= 1;
+    }
+    if(rnumber === 3) {
+        roff -= 1;
+        goff -= 1;
+        boff += 1;
+    }
+    if(rnumber === 4) {
+        roff += 1;
+        goff += 1;
+        boff -= 1;
+    }
+    if(rnumber === 5) {
+        roff -= 1;
+        goff += 1;
+        boff += 1;
+    }
+    if(rnumber === 6) {
+        roff -= 1;
+        goff -= 1;
+        boff -= 1;
+    }
+    textAlign(CENTER,CENTER);
+    textSize(50);
+    text("¥ɅƬƦіҠ ҎѦŧƐȴ",201,200);
+};
