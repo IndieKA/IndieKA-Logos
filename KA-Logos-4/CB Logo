@@ -1,0 +1,172 @@
+// When copying and pasting the code, restart program to make it work
+
+noStroke();
+angleMode = "degrees";
+var particles = 50;
+var currentPowerRatio = 0;
+var powerRatio = 0.3;
+var flock = false;
+var i = 0;
+var imgImages = [
+    getImage("avatars/leaf-blue"),
+    getImage("avatars/leaf-green"),
+    getImage("avatars/leaf-grey"),
+    getImage("avatars/leaf-orange"),
+    getImage("avatars/leaf-red"),
+    getImage("avatars/leaf-yellow"),
+];
+var randomArray = [];
+var randomIncr = 0;
+var randomSamples = particles*1;
+var p = 2;
+for(randomIncr = 0; randomIncr < randomSamples; randomIncr++) {
+    randomArray[randomIncr] = floor(
+        random(0, 1)*pow(10, p)
+    )/pow(10, p);
+}
+var rNum = function() {
+    return ++randomIncr >= randomArray.length ? 
+        randomArray[randomIncr=0] : 
+            randomArray[randomIncr];
+};
+var rRnge = function(start, stop) {
+    return rNum()*(stop-start)+start;
+};
+var img = function() {
+    this.x = rRnge(0, width);
+    this.y = rRnge(0, height);
+    this.radius = rRnge(15, 50);
+    this.vx = rRnge(-1, 1);
+    this.vy = rRnge(-1, 1);
+    
+    this.img = imgImages[floor(rRnge(-1, imgImages.length-1)+1)];
+    this.rotate = 0;
+    this.rotateOffset = rRnge(38, 42);
+    
+    this.ax = random(
+        this.vx < 0 ? -0.1 : 0, 
+        this.vx > 0 ? 0.1 : 0
+    );
+    this.ay = random(
+        this.vy < 0 ? -0.1 : 0, 
+        this.vy > 0 ? 0.1 : 0
+    );
+    
+    this.maxSpeed = rRnge(15, 20);
+    this.dist = 0;
+    this.updateVectors = function() {
+        this.vx += this.ax;
+        this.vy += this.ay;
+        
+        this.x += this.vx;
+        this.y += this.vy;
+    };
+    
+    this.collisionBoundaries = function() {
+        if(this.x + this.radius*2 < 0 && this.vx < 0) {
+            this.x = width + this.radius;
+        }
+        if(this.x - this.radius*2 > width && this.vx > 0) {
+            this.x = -this.radius;
+        }
+        if(this.y + this.radius*2 < 0 && this.vy < 0) {
+            this.y = height + this.radius;
+        }
+        if(this.y - this.radius*2 > height && this.vy > 0) {
+            this.y = -this.radius;
+        }
+    };
+    
+    this.changeDirection = function() {
+        if(this.vx > this.maxSpeed) {
+            this.vx = this.maxSpeed;
+            this.ax += random(
+                -0.2, 
+                0.1
+            );
+            this.maxSpeed = 5*rNum() + 15;
+        } else if(this.vx < -this.maxSpeed) {
+            this.vx = -this.maxSpeed;
+            this.ax += random(
+                -0.1,
+                0.2
+            );
+            this.maxSpeed = 5*rNum() + 15;
+        }
+        if(this.vy > this.maxSpeed) {
+            this.vy = this.maxSpeed;
+            this.ay += random(
+                -0.2,
+                0.1
+            );
+            this.maxSpeed = 5*rNum() + 15;
+        } else if(this.vy < -this.maxSpeed) {
+            this.vy = -this.maxSpeed;
+            this.ay += random(
+                -0.1,
+                0.2
+            );
+            this.maxSpeed = 5*rNum() + 15;
+        }
+    };
+    
+    this._anchor = function(x, y, strengthRatio) {
+        this.vx += strengthRatio * (x - this.x);
+        this.vy += strengthRatio * (y - this.y);
+    };
+    
+    this.update = function() {
+        this.updateVectors();
+        this.changeDirection();
+        
+        this.dist = dist(mouseX, mouseY, this.x, this.y);
+        this.collisionBoundaries();
+        // Rotate img towards the direction
+        this.rotate = atan2(this.vy, this.vx) + 
+            this.rotateOffset;
+    };
+    
+    this.draw = function() {
+        pushMatrix();
+        //fill(this.color);
+        translate(this.x, this.y);
+        rotate(this.rotate);
+        image(
+            this.img,
+            0,
+            0,
+            this.radius * 1,
+            this.radius * 1
+        );
+        popMatrix();
+    };
+};
+var img_array = [];
+for(i = 0; i < particles; i++) {
+    img_array[i] = new img();
+}
+var draw = function() {
+    background(217, 217, 217);
+    for(i = 0; i < img_array.length; i++) {
+        img_array[i].update();
+        img_array[i].draw();
+    }
+    textFont(createFont("Tahoma Bold"));
+    textAlign(CENTER,CENTER);
+    var r = map(sin(millis() * 0.5), -1, 1, 0, 255);
+    var g = map(sin((millis() * 0.8) + 87), -1, 1, 100, 200);
+    var b = map(sin(millis() + 124), -1, 1, 255, 0);
+    textSize(135);
+    pushMatrix();
+    translate(200, 200);
+    rotate(17);
+    fill(0);
+    text("CB", 6, 0);
+    fill(255, 255, 255);
+    text("CB", -7, 0);
+    strokeWeight(20);
+    stroke(r, g, b);
+    noFill();
+    ellipse(-6, -4, 282, 282);
+    popMatrix();
+};
