@@ -1,0 +1,21 @@
+var z = 0;
+var trig = function(theshape, x, y){
+    pushMatrix();
+    translate(200, 200);
+    fill(255, 255, 255);
+    noStroke();
+    for(var i = 0;i < 120;i+=1){
+        triangle(x-(x - frameCount/4), y-(y - frameCount%9), frameCount/3, frameCount,frameCount/3,frameCount%3);
+        rotate(z);
+        z = z + 3;
+    }
+    resetMatrix();
+};
+draw = function() {
+    background(168, 168, 168);
+    trig(ellipse, 200, 200, 100, 0, 255, 0);
+    textAlign(CENTER,CENTER);
+    textSize(153);
+    fill(0, 0, 0);
+    text("Brian",201,201);
+};
