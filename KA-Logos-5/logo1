@@ -1,0 +1,70 @@
+//Credit to trodo hawkins for page 2 background
+//Not done with this yet, took me only about 20 min to code
+var pg = 0;
+var timeSignature = 0;
+var x = 205;
+var y = 551;
+var rr = color(255, 0, 0);
+var gg = color(0, 255, 0);
+var bb = color(0, 255, 255);
+var cthru = 100;
+draw = function() {
+    if(pg === 0) {
+        textAlign(CENTER,CENTER);
+        background(176, 176, 176);
+        textSize(timeSignature);
+        fill(255);
+        text("Mother's\nDay", 205, 200);
+        timeSignature++;
+        if(frameCount > 130) {
+            pg = 1;
+        }
+    }
+    if(pg === 1){
+        x++;
+        y--;
+        var r = random(0,255), g = random(0,255), b = random(0,255);
+        background(189, 189, 189);
+        fill(r,g,b);
+        textSize(56);
+        text("Happy Mother's \nday, mom!",207,66);
+        textSize(30);
+        fill(255, 255, 255);
+        text("I hope you like this program I \nmade you.",x,191);
+        text("But wait! It's not over yet...",y,303);
+        if(frameCount > 500){
+            pg = 2;    
+        }
+    }
+    if(pg === 2){
+        background(255, 255, 255);
+        for(var i = 0; i < width*2; i += 0.2) {
+            pushMatrix();
+            translate(200, 200);
+            rotate(i*10);
+            noStroke();
+            fill(random(rr, 255),random(8, 255),random(20, 255), random(50, 250));
+            ellipse(i/2, i/100, random(10, 20), random(10, 20));
+            fill(random(0, 255),random(0, 0),random(0, 200),random(cthru, 250));
+            ellipse(i, i/54, random(10, 20), random(10, 20));
+            popMatrix();
+            i ++;
+        }
+        textSize(30);
+        fill(0, 0, 0);
+        text("You've done so much for me \never since I was born...",205,45);
+        fill(255, 0, 0);
+        text("and I\n\n\n\n\nyou for that",205,216);
+        textSize(105);
+        text("THANK",205,217);
+        if(frameCount > 600){
+            pg = 3;    
+        }
+        }
+    if(pg === 3){
+        background(143, 143, 143);
+        fill(255, 255, 255);
+        textSize(45);
+        text("so anyways...\n\njust remember\n\nthat someone\nwill always\nappreciate you.",207,196);
+    }
+};
